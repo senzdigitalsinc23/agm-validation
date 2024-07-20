@@ -1,0 +1,26 @@
+{
+    "name": "senz/simplephp",
+    "authors": [
+        {
+            "name": "Senz Digitals Inc",
+            "email": "senzdigitals.inc23@gmail.com"
+        }
+    ],
+    "require": {
+        "illuminate/collections": "^11.15"
+    },
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "Http\\": "Http/"
+        }
+    },
+    "require-dev": {
+        "pestphp/pest": "^2.34"
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
+}
