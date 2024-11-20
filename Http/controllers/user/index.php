@@ -7,21 +7,45 @@ $header = date('M') . " " . date('Y') . " Validation";
 $month = date('M');
 $year = date('Y');
 
-//dd($_SESSION);
 if (Auth::logged_in()) {
     $staff = '';
 
     $page = $_GET['page'] ?? 1;
-    //dd($page);
+    
     $number_per_page = 10;
     $total_records = 0;
     $initial_page = ($page - 1) * $number_per_page;
 
     $user = new UserModel();
 
+    if ($_SERVER['QUERY_STRING'] == '') {
+        unset($_SESSION['SEARCH']);
+    }
+
+
     if (isset($_GET['search']) && $_GET['search'] != '') {
 
         $name = $_GET['name'];
+
+        $_SESSION['SEARCH']['name'] = $_GET['name'];
+        $_SESSION['SEARCH']['page'] = $_GET['page'];
+        //dd($_SESSION);
+
+        $total_records = count(
+            $staff = $user->select('st.*, vd.status, vd.remarks')
+            ->from('staff AS st')
+            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->where('fname', "LIKE", '(')
+            ->or('lname', "LIKE")
+            ->or('oname', 'LIKE', ')')
+            ->fetch([
+                'fname'=> "%$name%",              
+                'lname'=> "%$name%",
+                'oname' => "%$name%"])                  
+            ->getAll()
+        );
+
+        $user->buildQuery = [];
 
         $staff = $user->select('st.*, vd.status, vd.remarks')
             ->from('staff AS st')
@@ -29,16 +53,33 @@ if (Auth::logged_in()) {
             ->where('fname', "LIKE", '(')
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
-            ->and('unit', '=')
             ->orderBy('fname', 'ASC')
+            ->limit($initial_page . ',' . $number_per_page)
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
-                'oname' => "%$name%",
-                'unit' => $_SESSION['USER']['unit']])                  
+                'oname' => "%$name%"])                  
             ->getAll();
 
         //dd($user->buildQuery);
+    }else if ($_SESSION['USER']['rank'] === "ITM") {
+        $total_records = count(
+            $staff = $user->select('st.*, vd.status, vd.remarks')
+            ->from('staff AS st')
+            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->fetch()
+            ->getAll()
+        );
+
+        $user->buildQuery = [];
+
+        $staff = $user->select('st.*, vd.status, vd.remarks')
+            ->from('staff AS st')
+            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->orderBy('status', 'ASC')
+            ->limit($initial_page . ',' . $number_per_page)
+            ->fetch()                  
+            ->getAll();
     }else {
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')
@@ -55,7 +96,7 @@ if (Auth::logged_in()) {
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
             ->where('unit', '=')
-            ->orderBy('fname', 'ASC')
+            ->orderBy('status', 'ASC')
             ->limit($initial_page . ',' . $number_per_page)
             ->fetch(['unit'=> $_SESSION['USER']['unit']])                  
             ->getAll();

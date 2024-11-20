@@ -6,9 +6,14 @@
 <div class="justify-content-center ">
     <div class="container-fluid w-900 bg-white p-3 rounded-4 shadow">  
         <form action="" method="GET">
-            <input type="text" id="user" class="form-control w-200 h-30" name="name" value="<?=$_GET['name'] ?? ''?>" required>
-            <button type="submit" class="btn btn-success btn-sm h-30 ms-3 mb-3" name="search" value="1">Search</button> 
-            <a href="/user" class="btn btn-danger btn-sm h-30 ms-3 mb-3">Reset</a> 
+            <div class="d-flex">
+                
+                <input type="text" id="user" class="form-control w-200 h-30" name="name" value="<?=$_GET['name'] ?? ''?>" required>
+                <input type="hidden" name="page" value="1">
+                <button type="submit" class="btn btn-success btn-sm h-30 ms-3 mb-3" name="search" value="1">Search</button> 
+                <a href="/user" class="btn btn-danger btn-sm h-30 ms-3 mb-3">Reset</a>
+            </div>    
+         
         </form>
     <?php if (isset($_SESSION['USER']) && $_SESSION['USER']['rank'] === 'Admin') : ?>
         <a href="/validations" class="text-white text-decoration-none"><button type="button" class="btn btn-primary btn-sm ms-2 mb-2 d-flex float-end"><<< Back</button></a>
@@ -57,9 +62,12 @@
             <?php if($dat['status'] !== 0 && $dat['status'] !== 1) : ?>
                 <form method="post">
                 <td>
+                    
                     <textarea name="remarks" id="remarks" class="rounded" rows="1"><?=isset($remarks) ?? "" ?></textarea>
-                    <input type="text" name="staff_id" id="staff_id" value="<?=$dat['staff_id'] ?? 'N/A'?>" hidden>
-                    <input type="text" name="user_id" id="user_id" value="<?=$dat['id'] ?? 'N/A'?>" hidden>
+                    <input type="hidden" name="name" id="staff_id" value="<?=$_SESSION['SEARCH']['name']?>" >
+                    <input type="hidden" name="page" id="staff_id" value="<?=$_SESSION['SEARCH']['page']?>" >
+                    <input type="hidden" name="staff_id" id="staff_id" value="<?=$dat['staff_id'] ?? 'N/A'?>" >
+                    <input type="hidden" name="user_id" id="user_id" value="<?=$dat['id'] ?? 'N/A'?>">
                 </td>
                 
                 <td><input type="submit" name="yes" value="Yes" class="btn btn-sm btn-primary">
@@ -76,8 +84,11 @@
     </table>
 
     <form method="get">
-    <div class="d-flex">
-        <input type="hidden" name="name" value="<?=$_SESSION['name'] ?? ''?>">
+    <div class="d-flex justify-content-center">
+        
+        <input type="hidden" name="name" value="<?=$_SESSION['SEARCH']['name'] ?? ''?>">
+        <input type="hidden" name="search" value="1">
+        
             <?php if($total_pages > 1) : ?>
                 <?php if($page <= 1) : ?>             
                     <button class="btn btn-sm btn-primary mb-5" name="page" disabled>Previous</button>
@@ -88,7 +99,7 @@
                 <div class="me-2 ms-2 ">
                     <button class="btn btn-sm btn-succes mb-5" name="page" value="1" >First page</button>
                     <?php if(isset($_GET['page']) && $_GET['page'] == 1) : ?>
-                        <div class="btn btn-sm btn-succuss mb-5" name="page" value="1" >  <?=$_GET['page'] ?? 1?>  <?=--$count?> of <?=$total_records ?>   </div> 
+                        <div class="btn btn-sm btn-succuss mb-5" name="page" value="1" > <strong><i> <?=$_GET['page'] ?? 1?> - <?=--$count?> of <?=$total_records ?> </i></strong></div> 
                     <?php else : ?>
                         <div class="btn btn-sm btn-succuss mb-5"><strong><i>  <?=isset($_GET['page']) ? $_GET['page'] - 1 . 1 : 1 ?> - <?=--$count?> of <?=$total_records ?> </i></strong></div> 
                     <?php endif ?>                   
@@ -110,9 +121,10 @@
                     
                 <?php endif ?> 
             <?php endif ?>
-        <div class="d-flex"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
+        
             
     </div>
+    <div class="d-flex justify-content-center text-warning"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
     </form>
     
     </div>
