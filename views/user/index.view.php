@@ -64,8 +64,6 @@
                 <td>
                     
                     <textarea name="remarks" id="remarks" class="rounded" rows="1"><?=isset($remarks) ?? "" ?></textarea>
-                    <input type="hidden" name="name" id="staff_id" value="<?=$_SESSION['SEARCH']['name']?>" >
-                    <input type="hidden" name="page" id="staff_id" value="<?=$_SESSION['SEARCH']['page']?>" >
                     <input type="hidden" name="staff_id" id="staff_id" value="<?=$dat['staff_id'] ?? 'N/A'?>" >
                     <input type="hidden" name="user_id" id="user_id" value="<?=$dat['id'] ?? 'N/A'?>">
                 </td>

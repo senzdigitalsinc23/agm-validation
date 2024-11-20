@@ -9,8 +9,8 @@ $_POST['validated_by'] = $_SESSION['USER']['id'];
 
 $user = new UserModel();
 
-$page = isset($_POST['page']) ? $_POST['page'] : 1;
-$name  =isset($_POST['name']) ? $_POST['name'] : '';
+$page = isset($_SESSION['SEARCH']['page']) ? $_SESSION['SEARCH']['page'] : 1;
+$name  =isset($_SESSION['SEARCH']['name']) ? $_SESSION['SEARCH']['name'] : '';
 
 //dd($_SESSION);
 
@@ -27,7 +27,7 @@ if (isset($_POST['yes'])) {
 }
 
 //dd($_POST);
-//$user->insert('validations', $_POST);
+$user->insert('validations', $_POST);
 
 if(isset($_SESSION['SEARCH'])){
     return redirect($uri);
