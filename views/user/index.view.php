@@ -1,0 +1,121 @@
+<?php require_once(base_path("views/partials/head.view.php")); ?>
+<?php require_once(base_path("views/partials/nav.view.php")); ?>
+<?php require_once(base_path("views/partials/banner.view.php")); ?>
+
+  
+<div class="justify-content-center ">
+    <div class="container-fluid w-900 bg-white p-3 rounded-4 shadow">  
+        <form action="" method="GET">
+            <input type="text" id="user" class="form-control w-200 h-30" name="name" value="<?=$_GET['name'] ?? ''?>" required>
+            <button type="submit" class="btn btn-success btn-sm h-30 ms-3 mb-3" name="search" value="1">Search</button> 
+            <a href="/user" class="btn btn-danger btn-sm h-30 ms-3 mb-3">Reset</a> 
+        </form>
+    <?php if (isset($_SESSION['USER']) && $_SESSION['USER']['rank'] === 'Admin') : ?>
+        <a href="/validations" class="text-white text-decoration-none"><button type="button" class="btn btn-primary btn-sm ms-2 mb-2 d-flex float-end"><<< Back</button></a>
+    <?php endif ?>
+    <table class="table table-striped table-bordered table-sm">
+    <tr class="table-primary table-dark">
+        <th>#</th>
+        <th>Staff ID</th>
+        <th>Name</th>
+        <th>Grade</th>
+        <th>Telephone</th>
+        <th>Status</th>
+        <th>Remarks</th>
+	<th>At Post?</th>
+    </tr>
+    <?php foreach($data as $dat) : ?>
+        <tr>
+            <td style="width: 50px;"><?=$count ?></td>
+            <?php if ($dat['staff_id'] === null) :?>
+                <td class="text-danger">N/A</td>
+            <?php else  : ?>
+                <td><?=esc($dat['staff_id']) ?></td>
+            <?php endif ?>
+
+            <td><?=$dat['fname'] ?> <?=$dat['oname'] ?> <?=$dat['lname'] ?></td>
+            <?php if ($dat['grade'] === null) :?>
+                <td class="text-danger">N/A</td>
+            <?php else  : ?>
+                <td><?=esc($dat['grade']) ?></td>
+            <?php endif ?>
+            <?php if ($dat['phone'] === null) :?>
+                <td class="text-danger">N/A</td>
+            <?php else  : ?>
+                <td><?=esc($dat['phone']) ?></td>
+            <?php endif ?>
+            <?php if (!isset($dat['status']) || $dat['status'] === null) :?>
+                <td class="text-danger">N/A</td>
+            <?php else  : ?>
+                <?php if($dat['status'] === 1) : ?>
+                    <td>At Post</td>
+                <?php else : ?>
+                    <td>Not At Post</td>
+                <?php endif ?>
+            <?php endif ?>
+
+            <?php if($dat['status'] !== 0 && $dat['status'] !== 1) : ?>
+                <form method="post">
+                <td>
+                    <textarea name="remarks" id="remarks" class="rounded" rows="1"><?=isset($remarks) ?? "" ?></textarea>
+                    <input type="text" name="staff_id" id="staff_id" value="<?=$dat['staff_id'] ?? 'N/A'?>" hidden>
+                    <input type="text" name="user_id" id="user_id" value="<?=$dat['id'] ?? 'N/A'?>" hidden>
+                </td>
+                
+                <td><input type="submit" name="yes" value="Yes" class="btn btn-sm btn-primary">
+                <input type="submit" name="no" value="No" class="btn btn-sm text-white bg-danger"></td>
+            </form>
+
+            <?php else : ?>
+                <td class="text-success"><?=$dat['remarks']?></td>
+            <?php endif ?>
+            
+        </tr>
+    <?php $count++?>
+    <?php endforeach ?>
+    </table>
+
+    <form method="get">
+    <div class="d-flex">
+        <input type="hidden" name="name" value="<?=$_SESSION['name'] ?? ''?>">
+            <?php if($total_pages > 1) : ?>
+                <?php if($page <= 1) : ?>             
+                    <button class="btn btn-sm btn-primary mb-5" name="page" disabled>Previous</button>
+                <?php else : ?>                
+                    <button class="btn btn-sm btn-primary mb-5" name="page" value="<?=--$page ?>" >Previous</button>   
+                <?php endif ?> 
+
+                <div class="me-2 ms-2 ">
+                    <button class="btn btn-sm btn-succes mb-5" name="page" value="1" >First page</button>
+                    <?php if(isset($_GET['page']) && $_GET['page'] == 1) : ?>
+                        <div class="btn btn-sm btn-succuss mb-5" name="page" value="1" >  <?=$_GET['page'] ?? 1?>  <?=--$count?> of <?=$total_records ?>   </div> 
+                    <?php else : ?>
+                        <div class="btn btn-sm btn-succuss mb-5"><strong><i>  <?=isset($_GET['page']) ? $_GET['page'] - 1 . 1 : 1 ?> - <?=--$count?> of <?=$total_records ?> </i></strong></div> 
+                    <?php endif ?>                   
+                       
+                        <!-- <?php if(isset($_GET['page']) && $a == $_GET['page']) : ?>
+                            <div class="btn btn-sm btn-danger mb-5" name="page" value="<?=$page=$a?>"> <?=$a?></div> 
+                        <?php else : ?>
+                            <button class="btn btn-sm btn-succes mb-5" name="page" value="<?=$page=$a?>" ><?=$a?></button>
+                        <?php endif ?> -->
+                    <button class="btn btn-sm btn-succes mb-5" name="page" value="<?=$total_pages?>" >Last page</button>
+                    
+                    
+                </div>
+
+                <?php if(isset($_GET['page']) && $_GET['page'] >= $total_pages) : ?>              
+                    <button class="btn btn-sm btn-primary mb-5" name="page" disabled>Next</button>
+                <?php else : ?>
+                    <button class="btn btn-sm btn-primary mb-5" name="page" value="<?=$page = isset($_GET['page']) ? $_GET['page'] + 1 : 2;?>" >Next</button>
+                    
+                <?php endif ?> 
+            <?php endif ?>
+        <div class="d-flex"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
+            
+    </div>
+    </form>
+    
+    </div>
+</div>
+
+<?php require_once(base_path("views/partials/footer.view.php")); ?>

@@ -1,5 +1,5 @@
 <?php 
 
-$header = "Home";
+$header = "Login";
 
-require_once base_path("views/index.view.php");
+return redirect('/login');

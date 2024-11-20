@@ -5,7 +5,7 @@ use Http\Models\RegisterModel;
 
 require_once BASE_PATH. "Core/helpers.php";
 
-$header = "Create Note";
+$header = "Grant Permision";
 
 $register = new RegisterModel();
 

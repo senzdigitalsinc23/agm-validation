@@ -18,29 +18,28 @@ class Database {
     }
 
     public function query($query, $params = []) {
-        //dd($query); 
+       
+        //dd($query);
         $this->statement = $this->connection->prepare($query);
 
         $this->statement->execute($params);
 
+        //echo $query . "<br>";
+
         return $this;
     }
 
-    public function find(){
-        return $this->statement->fetch();
+    public function getAll(){
+        return $this->statement->fetchAll();
     }
 
     public function get(){
-        return $this->statement->fetchAll();
-    }
-
-    public function where()  {
-        return $this->statement->fetchAll();
+        return $this->statement->fetch();
     }
 
     public function findOrFail(){
         
-        $result = $this->find();
+        $result = $this->get();
 
         if (! $result) {
             abort();

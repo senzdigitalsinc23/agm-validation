@@ -15,13 +15,4 @@ class LoginModel extends Model
         return empty($this->errors);
     }
 
-    public function checkUsernameType($data)
-    {
-        if (Validator::email($data['username'])) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
 }

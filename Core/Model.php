@@ -5,32 +5,121 @@ class Model extends Database
 {
     protected $db;
     public $errors;
+    protected $select;
+    protected $from;
+    protected $where;
+    protected $limit;
+    protected $leftJoin;
+    protected $and;
+    protected $or;
+    protected $count;
+    protected $order_by;
+    public $buildQuery = [];
+
     public function __construct() {
         $this->db = App::resolve(Database::class);
     }
 
-    public function getAll($table = '') {
-         $result = $this->db->query("SELECT * FROM {$table}")->get();
+    public function select(...$columns) {
 
-        return $result;
+        if (empty($columns)) {
+            $this->select = "SELECT * ";
+        }else {
+            $this->select = "SELECT ";
+            foreach ($columns as $col) {
+                $this->select .= $col . ", ";
+            }
+        }
+
+        $this->buildQuery[] = rtrim($this->select, ', ');
+
+        return $this;
     }
 
-    public function find($table = '', $key = '', $value = '') {
-        $result = $this->db->query("SELECT * FROM {$table} WHERE $key = :{$key}", [$key => $value])->find();
+    public function from($table) {
+        $this->from = " FROM $table";
 
-        return $result;
+        $this->buildQuery[] = $this->from;
+
+        return $this;
+    }
+
+    public function where($cond1, $operator, $acceptBrace = '') {
+        $this->where = "WHERE $acceptBrace$cond1 $operator :$cond1";
+
+        //echo "$cond1 $operator <br>";
+
+        $this->buildQuery[] = $this->where;
+
+        //dd($this->buildQuery);
+
+        return $this;
+    }
+
+    public function leftJoin($table, $column, $on) {
+        $this->leftJoin = "LEFT JOIN $table ON $column = $on";
+
+        $this->buildQuery[] = $this->leftJoin;
+
+        //dd($this->buildQuery);
+
+        return $this;
+    }
+
+    public function count($column) {
+        $this->count = "SELECT count($column)";
+
+        $this->buildQuery[] = $this->count;
+
+        return $this;
+    }
+
+    public function limit($limit) {
+        $this->limit = "LIMIT $limit";
+
+        $this->buildQuery[] = $this->limit;
+
+        //dd($this->buildQuery);
+
+        return $this;
+    }
+
+    public function and($key, $cond, $acceptBrace = '')  {
+        $this->and = "AND $key $cond :$key$acceptBrace";
+
+        $this->buildQuery[] = $this->and;
+
+        return $this;
+    }
+
+    public function or($key, $cond, $acceptBrace = '')  {
+        $this->or = "OR $key $cond :$key$acceptBrace";
+
+        $this->buildQuery[] = $this->or;
+
+        //dd($this->buildQuery);
+
+        return $this;
     }
     
-    public function findOrFail($table = '', $key = '', $value = '') {
-        $result = $this->db->query("SELECT * FROM {$table} WHERE $key = :{$key}", [$key => $value])->findOrFail();
+    public function fetch($data = []) {
+        //dd($this->buildQuery);
 
-        return $result;
+        $sql = implode(' ', $this->buildQuery);
+        //dd($sql);
+        $query = $this->db->query($sql, $data);
+
+        return $query;
     }
 
-    public function where($table = '', $key = '', $value = '') {
-        $result = $this->db->query("SELECT * FROM {$table} WHERE $key = :{$key}", [$key => $value])->where();
+    public function orderBy($column, $cond = 'ASC') {
+        $this->order_by = "ORDER BY $column $cond";
 
-        return $result;
+        $this->buildQuery[] = $this->order_by;
+
+        //dd($this->buildQuery);
+
+        return $this;
     }
 
     public function insert($table, $values = []) {
@@ -45,22 +134,30 @@ class Model extends Database
         $this->db->query("DELETE FROM $table WHERE $key = :$key", ['id' => $value]);
     }
 
-    public function update($table, $keys = []) {
+    public function update($table, $keys = [], $id = '') {
+
+        //dd($keys);
+        $data = $keys;
 
         $keys = array_keys($keys);
         $values = implode(',:', $keys);
         //$keys = implode("={$values},", $keys);
 
-        //dd($keys);
+        //dd($values);
+
         $keypairs = '';
 
         foreach ($keys as $key) {
             $keypairs .= $key . " = :$key,";
         }
 
+        $keypairs = trim($keypairs, ',');
 
-        $this->db->query("UPDATE $table  SET  `title` = :title, `body` = :body  WHERE id = :id AND user_id = :user_id", [ ]);
+        //dd($data);
+
+        $this->db->query("UPDATE `$table` SET  $keypairs WHERE user_id = :user_id", $data);
     }
+
 
     public function error($message) {
         $this->errors['username'] = $message;

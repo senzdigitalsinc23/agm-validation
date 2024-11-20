@@ -12,21 +12,31 @@ $login = new LoginModel();
 
 if($login->validate($_POST)){
 
-    $results = [];
-
-    if ($login->checkUsernameType($_POST)) {
-        $results = $login->find('users', 'email', $_POST['username']);
-    }else {
-        $results = $login->find('users', 'username', $_POST['username']);
-    }
-
+    $results = [];//find('users', 'username', $_POST['username'])
+    
+    $results = $login->select()
+                    ->from('users AS us')
+                     ->leftJoin('staff AS st', 'us.user_id', 'st.id')
+                     ->leftJoin('units AS un', 'un.unit_id', 'st.unit')
+                     ->where('username', '=')
+                     ->fetch(['username' => $_POST['username']])
+                     ->get();
+                     
+    
     if ($results ) {
         if (password_verify($_POST['password'], $results['password'])) {
             Auth::user($results);
 
             session_regenerate_id(true);
 
-            redirect('/');
+            //dd($results);
+
+            if ($results['rank'] === 'Admin' || $results['rank'] === 'ITO') {
+                redirect('/validations');
+                exit;
+            } else {
+                redirect('/user');
+            }
         }
 
         $login->error('Invalid username or password');
@@ -38,6 +48,8 @@ if($login->validate($_POST)){
 
 Session::flash('errors', $login->errors);
 Session::flash('data', $_POST);
+
+//dd($_SESSION);
 
 return redirect("/login");
 

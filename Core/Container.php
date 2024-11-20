@@ -4,10 +4,7 @@ namespace Core;
 
 class Container {
     protected $bindings = [];
-    public function __construct() {
-        
-    }
-
+    
     public function bind($key, $resolver) {
         $this->bindings[$key] = $resolver;
     }
@@ -15,7 +12,7 @@ class Container {
     public function resolve($key) {
         if (array_key_exists($key, $this->bindings)) {
            $resolver = $this->bindings[$key];
-
+            
            return call_user_func($resolver);
         }
 

@@ -38,11 +38,11 @@ function base_path($path){
 function view($view, $params = []){
     extract($params);
 
-    require_once base_path("views/" . $view . ".view.php");
+    require_once base_path("views//" . $view . ".view.php");
 }
 
 function redirect($path){
-    header("Location: {$path}");
+    return header("Location: {$path}");
     exit;
 }
 
@@ -52,4 +52,16 @@ function authenticated() {
     }
 
     return false;
+}
+
+function page_numb(int $page_num): int {
+    $count = 1;
+
+    if ($page_num == 1) {
+        $count = 1;
+    }else {
+        $count = (int) (--$page_num . 1);
+    }
+
+    return $count;
 }

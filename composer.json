@@ -1,5 +1,11 @@
 {
-    "name": "senz/simplephp",
+    "name": "senz/agm-validation",
+    "autoload": {
+        "psr-4": {
+            "Core\\": "Core/",
+            "Http\\": "Http/"
+        }
+    },
     "authors": [
         {
             "name": "Senz Digitals Inc",
@@ -7,20 +13,6 @@
         }
     ],
     "require": {
-        "illuminate/collections": "^11.15"
-    },
-    "autoload": {
-        "psr-4": {
-            "Core\\": "Core/",
-            "Http\\": "Http/"
-        }
-    },
-    "require-dev": {
-        "pestphp/pest": "^2.34"
-    },
-    "config": {
-        "allow-plugins": {
-            "pestphp/pest-plugin": true
-        }
+        "tecnickcom/tcpdf": "^6.7"
     }
 }

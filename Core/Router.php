@@ -50,6 +50,7 @@ class Router {
     public function route($uri, $method) {
         //dd($this->routes);
         foreach ($this->routes as $route) {
+            //dd($this->routes);
             if ($route['uri'] === $uri && $route['method'] === strtoupper($method)) {
               
                 Middleware::resolve($route['middleware']);
