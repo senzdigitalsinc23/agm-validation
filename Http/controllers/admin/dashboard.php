@@ -38,6 +38,8 @@ if (Auth::logged_in()) {
         Session::flash('status', $_GET['status']);
         Session::flash('unit', $_GET['unit']);
         Session::flash('unit_name', $unit_name['unit_name'] ?? 'All Units');
+
+        //dd($_SESSION);
         
         if (isset($_GET['excel'])) {
             $_SESSION['status'] = $_GET['status'];
@@ -83,9 +85,9 @@ if (Auth::logged_in()) {
         Session::flash('status', $_GET['status'] ?? "");
         Session::flash('unit', $_GET['unit'] ?? "");
         Session::flash('unit_name', $unit_name['unit_name'] ?? 'All Units');
-        //dd('sadfhdghdfg');
+        
 
-    }else if ($_GET['unit'] === 'all' && $_GET['status'] !== 'all') {
+    }/* else if ($_GET['unit'] === 'all' && $_GET['status'] !== 'all') {
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')
             ->from('staff AS st')        
@@ -110,7 +112,7 @@ if (Auth::logged_in()) {
             Session::flash('unit', $_GET['unit']);
             Session::flash('unit_name', $unit_name['unit_name'] ?? 'All Units');
 
-    } else if ($_GET['unit'] !== 'all' && $_GET['status'] !== 'all') {
+    } */ else if ($_GET['unit'] !== 'all' && $_GET['status'] !== 'all') {
 
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')

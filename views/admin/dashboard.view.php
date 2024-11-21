@@ -9,10 +9,10 @@
             <!-- <input type="unit" name="unit" list="unit" id="unit" onclick="selectUnit()" value="<?=$_SESSION['_flash']['unit'] ?? 'All Units'?>" class="form-control w-200 h-40"> -->
             <select id="unit" class="form-control w-200 h-30" name="unit">            
                 <option value="all">All Units</option> 
-                <?php if(isset($_SESSION['unit'])) : ?>
-                    <option value="<?=$_SESSION['unit']?>" selected> <?=$_SESSION['unit_name']?>  </option>
+                <?php if(isset($_SESSION['_flash']['unit'])) : ?>
+                    <option value="<?=$_SESSION['_flash']['unit']?>" selected> <?=$_SESSION['_flash']['unit_name']?>  </option>
                 <?php else : ?>
-                    
+                    <option value="all" selected>All Units</option> 
                 <?php endif ?>
 
                 <?php foreach($units as $unit) : ?>
@@ -153,7 +153,7 @@
 
 <?php
 
-unset($_SESSION['_flash']);
+//unset($_SESSION['_flash']);
 
 ?>                  
 <?php require_once(base_path("views/partials/footer.view.php")); ?>
