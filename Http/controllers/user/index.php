@@ -26,6 +26,7 @@ if (Auth::logged_in()) {
     if (isset($_GET['search']) && $_GET['search'] != '') {
 
         $name = $_GET['name'];
+        $unit = $_SESSION['USER']['unit'];
 
         $_SESSION['SEARCH']['name'] = $_GET['name'];
         $_SESSION['SEARCH']['page'] = $_GET['page'];
@@ -38,10 +39,12 @@ if (Auth::logged_in()) {
             ->where('fname', "LIKE", '(')
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
+            ->and('unit', '=')
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
-                'oname' => "%$name%"])                  
+                'oname' => "%$name%",
+                'unit'  => $unit])                  
             ->getAll()
         );
 
@@ -53,12 +56,14 @@ if (Auth::logged_in()) {
             ->where('fname', "LIKE", '(')
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
+            ->and('unit', '=')
             ->orderBy('fname', 'ASC')
             ->limit($initial_page . ',' . $number_per_page)
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
-                'oname' => "%$name%"])                  
+                'oname' => "%$name%",
+                'unit'  => $unit])                  
             ->getAll();
 
         //dd($user->buildQuery);
