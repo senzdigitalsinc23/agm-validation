@@ -107,7 +107,7 @@
 
         
     </table>
-    <div class="d-flex">
+    <div class="d-flex justify-content-center">
             <?php if($total_pages > 1) : ?>
                 <?php if($page <= 1) : ?>             
                     <button class="btn btn-sm btn-primary mb-5" name="page" disabled>Previous</button>
@@ -118,7 +118,7 @@
                 <div class="me-2 ms-2 ">
                     <button class="btn btn-sm btn-succes mb-5" name="page" value="1" >First page</button>
                     <?php if(isset($_GET['page']) && $_GET['page'] == 1) : ?>
-                        <div class="btn btn-sm btn-succuss mb-5" name="page" value="1" >  <?=$_GET['page'] ?? 1?>  <?=--$count?> of <?=$total_records ?>   </div> 
+                        <div class="btn btn-sm btn-succuss mb-5" name="page" value="1" > <strong><i> <?=$_GET['page'] ?? 1?> - <?=--$count?> of <?=$total_records ?> </i></strong>  </div> 
                     <?php else : ?>
                         <div class="btn btn-sm btn-succuss mb-5"><strong><i>  <?=isset($_GET['page']) ? $_GET['page'] - 1 . 1 : 1 ?> - <?=--$count?> of <?=$total_records ?> </i></strong></div> 
                     <?php endif ?>                   
@@ -142,10 +142,10 @@
         
             
     </div>
-   
+    <div class="d-flex justify-content-center text-aliceblue"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
 </form>
-<div class="d-flex justify-content-center"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
-     </div>
+
+</div>
      
 </div>
 
