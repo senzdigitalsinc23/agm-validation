@@ -5,10 +5,11 @@
 <div class="d-block ">
     <div class="container-fluid w-900 bg-white p-3 rounded-4 shadow">    
      <form  method="get" class="d-block w-100" id="myForm">
-        <div class="d-flex">
-            <!-- <input type="unit" name="unit" list="unit" id="unit" onclick="selectUnit()" value="<?=$_SESSION['_flash']['unit'] ?? 'All Units'?>" class="form-control w-200 h-40"> -->
-            <select id="unit" class="form-control w-200 h-30" name="unit">            
+        <div class="d-flex">  
+            <select id="unit" class="form-control w-200 h-30" name="unit">  
+                     
                 <option value="all">All Units</option> 
+                
                 <?php if(isset($_SESSION['_flash']['unit'])) : ?>
                     <option value="<?=$_SESSION['_flash']['unit']?>" selected> <?=$_SESSION['_flash']['unit_name']?>  </option>
                 <?php else : ?>
@@ -22,8 +23,7 @@
                 <?php endforeach ?>
                 
             </select>
-
-            <!-- <input type="status" name="status" list="status" id="status" onclick="selectStatus()" value="<?=$_SESSION['_flash']['status'] ?? 'Select Status'?>" class="form-control w-200 h-40 ms-2"> -->
+            
             <select id="status" class="form-control w-200 h-30 ms-2" name="status">
                 <option value="all" >Select Status</option>
                 
@@ -35,15 +35,13 @@
                     <option value="<?=$_SESSION['_flash']['status']?>" selected> <?=$_SESSION['_flash']['status'] == 1 ? "At Post" : "Not At Post"?> </option>
                 <?php else : ?>
                     <option value="1">At Post</option>
-                    <option value="0">Not At Post</option><!-- 
-                    <option value="2">Unvalidated</option>
-                    <option value="3">Validated</option> -->
+                    <option value="0">Not At Post</option>
                 <?php endif ?>
                     
                     
             </select>
         
-            <button type="submit" class="btn btn-success btn-sm h-30 ms-3 mb-3" name="search" value="1">Search</button>            
+            <button type="submit" class="btn btn-success btn-sm h-30 ms-3 mb-3" name="page" value="1">Search</button>            
         </div>
 
          <div class="d-flex float-end">
@@ -136,7 +134,7 @@
                 </div>
 
                 <?php if(isset($_GET['page']) && $_GET['page'] >= $total_pages) : ?>              
-                    <button class="btn btn-sm btn-primary mb-5" name="page" disabled>Next</button>
+                    <button class="btn btn-sm btn-primary mb-5"disabled>Next</button>
                 <?php else : ?>
                     <button onclick="" class="btn btn-sm btn-primary mb-5" name="page" value="<?=$page = isset($_GET['page']) ? $_GET['page'] + 1 : 2;?>" >Next</button>                    
                 <?php endif ?> 
@@ -153,7 +151,8 @@
 
 <?php
 
-//unset($_SESSION['_flash']);
+unset($_SESSION['_flash']);
+//dd($_SESSION);
 
 ?>                  
 <?php require_once(base_path("views/partials/footer.view.php")); ?>
