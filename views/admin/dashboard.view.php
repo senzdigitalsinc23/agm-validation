@@ -68,6 +68,7 @@
         <th>Telephone</th>
         <th>Status</th>
         <th>Remarks</th>
+        <th>Unit</th>
     </tr>
     <?php foreach($data as $dat) : ?>
         <tr>
@@ -100,6 +101,7 @@
             <?php endif ?>
 
             <td><?=$dat['remarks'] ?? "" ?></td>
+            <td><?=$dat['unit_name'] ?? "" ?></td>
             
         </tr>
     <?php $count++?>

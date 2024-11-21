@@ -14,6 +14,10 @@ body {
     background-color: brown;
 }
 
+.text-aliceblue {
+    color: rgb(139, 199, 250);
+}
+
 .text-brown {
     color: brown;
 }

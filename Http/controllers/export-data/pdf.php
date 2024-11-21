@@ -24,9 +24,10 @@ if (Auth::logged_in()) {
 
     if (!isset($_SESSION['unit']) || ((isset($_SESSION['unit']) && $_SESSION['unit'] === 'all') && $_SESSION['status'] === 'all')) {
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*,unit_name, vd.status, vd.remarks')
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->fetch()
             ->getAll();
         //dd($_SESSION);
@@ -42,9 +43,10 @@ if (Auth::logged_in()) {
 
     }  */else if ($_SESSION['unit'] !== 'all' && $_SESSION['status'] !== 'all') {
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('status', '=')
             ->and('unit', '=')
             ->fetch(['status' => $_SESSION['status'], 'unit' => $_SESSION['unit']])                  
@@ -53,9 +55,10 @@ if (Auth::logged_in()) {
         
     }else {
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('unit', '=')
             ->fetch([':unit' => $_SESSION['unit'] ?? ''])                  
             ->getAll();
@@ -107,6 +110,7 @@ $tbl = <<<EOD
 <th width="90">TELEPHONE</th>
 <th width="80">STATUS</th>
 <th width="200">REMARKS</th>
+<th width="200">UNIT</th>
 </tr>
 EOD;
 
@@ -134,6 +138,7 @@ $count = 1;
 <td> {$row['phone']}</td>
 <td> {$row['status']}</td>
 <td> {$row['remarks']}</td>
+<td> {$row['unit_name']}</td>
 </tr>";
 
     $count++;

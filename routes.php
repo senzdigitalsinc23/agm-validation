@@ -41,6 +41,6 @@ $router->get('/updatepasswd', "authentication/resetpasswd/create.php")->only('au
 $router->get('/user', "user/index.php")->only('auth');
 $router->post('/user', "user/store.php")->only('auth');
 
-$router->get('/validations', "admin/dashboard.php")->only('auth');
+$router->get('/validations', "admin/dashboard.php")->only('auth')->only('authorized');
 $router->get('/export-data', "export-data/excel.php")->only('auth');
 $router->get('/export-pdf', "export-data/pdf.php")->only('auth');

@@ -23,9 +23,10 @@ if (Auth::logged_in()) {
 
     if (!isset($_SESSION['unit']) || ((isset($_SESSION['unit']) && $_SESSION['unit'] === 'all') && $_SESSION['status'] === 'all')) {
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->fetch()                  
             ->getAll();
     }/* else if ($_SESSION['unit'] === 'all' && $_SESSION['status'] !== 'all') {
@@ -40,9 +41,10 @@ if (Auth::logged_in()) {
 
     }  */else if ($_SESSION['unit'] !== 'all' && $_SESSION['status'] !== 'all') {
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*,unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('status', '=')
             ->and('unit', '=')
             ->fetch(['status' => $_SESSION['status'], 'unit' => $_SESSION['unit']])                  
@@ -51,9 +53,10 @@ if (Auth::logged_in()) {
         
     }else {
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*,unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('unit', '=')
             ->fetch([':unit' => $_SESSION['unit'] ?? ''])                  
             ->getAll();
@@ -72,7 +75,7 @@ function filterData(&$str){
 $filename = 'validated-emp_' . date('m-d-Y') . ".xlsx";
 
 //Column headers
-$fields = array('#', 'NAME', 'GRADE', 'STAFF ID', 'TELEPHONE', 'STATUS', 'REMARKS');
+$fields = array('#', 'NAME', 'GRADE', 'STAFF ID', 'TELEPHONE', 'STATUS', 'REMARKS', 'UNIT');
 
 //Display column names as first row
 $excelData = implode("\t", array_values($fields)) . "\n";
@@ -90,7 +93,7 @@ if ($staff) {
             $status = "Not Validated";
         }
 
-        $rawData = array($count, $st['fname'] . ' ' . $st['oname'] . ' ' . $st['lname'], $st['grade'], $st['staff_id'], $st['phone'], $status, $st['remarks']);
+        $rawData = array($count, $st['fname'] . ' ' . $st['oname'] . ' ' . $st['lname'], $st['grade'], $st['staff_id'], $st['phone'], $status, $st['remarks'], $st['unit_name']);
 
         $excelData .= implode("\t", array_values($rawData)) . "\n";
 

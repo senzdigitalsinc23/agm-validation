@@ -122,7 +122,7 @@
         
             
     </div>
-    <div class="d-flex justify-content-center text-warning"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
+    <div class="d-flex justify-content-center text-aliceblue"><strong><i>Page <?=isset($_GET['page']) ? $_GET['page'] : 1 ?> of <?=$total_pages?></i></strong> </div>
     </form>
     
     </div>

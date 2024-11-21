@@ -62,18 +62,20 @@ if (Auth::logged_in()) {
 
     if (!isset($_GET['unit']) || (isset($_GET['unit']) && $_GET['unit'] === 'all' && $_GET['status'] === 'all')) {
         $total_records = count(
-            $staff = $user->select('st.id, vd.status, vd.remarks')
+            $staff = $user->select('st.id, unit_name, vd.status, vd.remarks')
                 ->from('staff AS st')
                 ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
                 ->fetch()
                 ->getAll()
         );
 
         $user->buildQuery = [];
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name,  vd.status, vd.remarks')
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->limit($initial_page . ','. $number_per_page)
             ->fetch()                  
             ->getAll();
@@ -95,9 +97,10 @@ if (Auth::logged_in()) {
 
         $user->buildQuery = [];
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('status', '=')
             ->limit($initial_page . ','. $number_per_page)
             ->fetch([':status' => $_GET['status'] ?? ''])                  
@@ -121,9 +124,10 @@ if (Auth::logged_in()) {
 
         $user->buildQuery = [];
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('status', '=')
             ->and('unit', '=')
             ->limit($initial_page . ','. $number_per_page)
@@ -147,9 +151,10 @@ if (Auth::logged_in()) {
 
         $user->buildQuery = [];
 
-        $staff = $user->select('st.*, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
             ->where('unit', '=')
             ->limit("$initial_page , $number_per_page")
             ->fetch([':unit' => $_GET['unit'] ?? ''])                  
@@ -167,6 +172,8 @@ if (Auth::logged_in()) {
 }
 
 $num_of_pages = ceil(num: $total_records / $number_per_page);
+
+//dd($staff);
 
 return view('admin/dashboard', [
     'header' => $header,
