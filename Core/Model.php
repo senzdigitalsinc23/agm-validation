@@ -44,14 +44,13 @@ class Model extends Database
         return $this;
     }
 
-    public function where($cond1, $operator, $acceptBrace = '') {
-        $this->where = "WHERE $acceptBrace$cond1 $operator :$cond1";
+    public function where($cond1, $operator = '', $acceptBrace = '') {
 
-        //echo "$cond1 $operator <br>";
+        $this->where = "WHERE $acceptBrace$cond1 $operator :$cond1";
 
         $this->buildQuery[] = $this->where;
 
-        //dd($this->buildQuery);
+       // dd($this->buildQuery);
 
         return $this;
     }

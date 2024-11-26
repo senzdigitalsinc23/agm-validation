@@ -28,14 +28,21 @@
                 <option value="all" >Select Status</option>
                 
                 <?php if(isset($_SESSION['_flash']['status']) && $_SESSION['_flash']['status'] == 1) : ?>
-                    <option value="<?=$_SESSION['_flash']['status']?>" selected> <?=$_SESSION['_flash']['status'] == 1 ? "At Post" : "Not At Post"?> </option>
+                    <option value="<?=$_SESSION['_flash']['status']?>" selected> <?=$_SESSION['_flash']['status'] == 1 ? "At Post" : "Select Status"?> </option>
                     <option value="0">Not At Post</option>
+                    <option value="IS NULL">Unvalidated</option>
                 <?php elseif(isset($_SESSION['_flash']['status']) && $_SESSION['_flash']['status'] == 0) : ?>
                     <option value="1">At Post</option>
-                    <option value="<?=$_SESSION['_flash']['status']?>" selected> <?=$_SESSION['_flash']['status'] == 1 ? "At Post" : "Not At Post"?> </option>
+                    <option value="<?=$_SESSION['_flash']['status']?>" selected> <?=$_SESSION['_flash']['status'] == 1 ? "At Post" : "Select Status"?> </option>
+                    <option value="2">Unvalidated</option>
+                <?php elseif(isset($_SESSION['_flash']['status']) && $_SESSION['_flash']['status'] == 'IS NULL') : ?>
+                    <option value="1">At Post</option>
+                    <option value="1">Not At Post</option>
+                    <option value="<?=$_SESSION['_flash']['status']?>" selected> <?=$_SESSION['_flash']['status'] == 'IS NULL' ? "Unvalidated" : "Select Status"?> </option>
                 <?php else : ?>
                     <option value="1">At Post</option>
                     <option value="0">Not At Post</option>
+                    <option value="IS NULL">Not Validated</option>
                 <?php endif ?>
                     
                     
