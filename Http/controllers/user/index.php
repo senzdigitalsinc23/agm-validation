@@ -44,7 +44,7 @@ if (Auth::logged_in()) {
         $user->truncate('validations');
     }
 
-    $user->buildQuery = [];
+    
 
     if (isset($_GET['search']) && $_GET['search'] != '') {
 
@@ -54,6 +54,7 @@ if (Auth::logged_in()) {
         $_SESSION['SEARCH']['name'] = $_GET['name'];
         $_SESSION['SEARCH']['page'] = $_GET['page'];
 
+       // dd($user->buildQuery);
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')
             ->from('staff AS st')
@@ -62,7 +63,6 @@ if (Auth::logged_in()) {
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
             ->and('unit', '=')
-            ->and('month')
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
