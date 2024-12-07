@@ -44,13 +44,14 @@ class Model extends Database
         return $this;
     }
 
-    public function where($cond1, $operator = '', $acceptBrace = '') {
-
+    public function where($cond1, $operator, $acceptBrace = '') {
         $this->where = "WHERE $acceptBrace$cond1 $operator :$cond1";
+
+        //echo "$cond1 $operator <br>";
 
         $this->buildQuery[] = $this->where;
 
-       // dd($this->buildQuery);
+        //dd($this->buildQuery);
 
         return $this;
     }
@@ -127,6 +128,14 @@ class Model extends Database
         $keys = implode(',', $keys);
 
         $this->db->query("INSERT INTO `$table` ($keys) VALUES (:$placeholders)", $values);
+    }
+
+    public function writeQuery($query) {
+        $this->db->query($query);
+    }
+
+    public function truncate($table){
+        $this->db->query("TRUNCATE $table");
     }
 
     public function remove($table, $key, $value) {

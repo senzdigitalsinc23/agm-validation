@@ -12,8 +12,6 @@ $user = new UserModel();
 $page = isset($_SESSION['SEARCH']['page']) ? $_SESSION['SEARCH']['page'] : 1;
 $name  =isset($_SESSION['SEARCH']['name']) ? $_SESSION['SEARCH']['name'] : '';
 
-//dd($_SESSION);
-
 $uri = "/user?name=$name&search=1&page=$page";
 
 if (isset($_POST['yes'])) {
@@ -26,7 +24,6 @@ if (isset($_POST['yes'])) {
     unset($_POST['no']);
 }
 
-//dd($_POST);
 $user->insert('validations', $_POST);
 
 if(isset($_SESSION['SEARCH'])){

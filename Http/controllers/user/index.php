@@ -22,6 +22,29 @@ if (Auth::logged_in()) {
         unset($_SESSION['SEARCH']);
     }
 
+    $thisMonth = date('m');
+    $day = date('d');
+
+   // dd($thisMonth);
+
+    $monthYear = $user->select('month, year')
+                    ->from('validations')
+                    ->fetch()
+                    ->get();
+
+    $user->buildQuery = [];
+
+    $prevMonth = date(strtotime($monthYear['month']));
+
+    if ($monthYear && !($thisMonth == $prevMonth) && $day >= 15) {
+        
+       $user->writeQuery('INSERT INTO all_validations (staff_id, `status`,`month`,`year`,remarks,validated_by,date_validated,user_id)
+                                     SELECT staff_id, `status`,`month`,`year`,remarks,validated_by,date_validated,user_id FROM validations');
+
+        $user->truncate('validations');
+    }
+
+    $user->buildQuery = [];
 
     if (isset($_GET['search']) && $_GET['search'] != '') {
 
@@ -30,7 +53,6 @@ if (Auth::logged_in()) {
 
         $_SESSION['SEARCH']['name'] = $_GET['name'];
         $_SESSION['SEARCH']['page'] = $_GET['page'];
-        //dd($_SESSION);
 
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')
@@ -40,6 +62,7 @@ if (Auth::logged_in()) {
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
             ->and('unit', '=')
+            ->and('month')
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
@@ -66,7 +89,6 @@ if (Auth::logged_in()) {
                 'unit'  => $unit])                  
             ->getAll();
 
-        //dd($user->buildQuery);
     }else if ($_SESSION['USER']['rank'] === "ITM") {
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')

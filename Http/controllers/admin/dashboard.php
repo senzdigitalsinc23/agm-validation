@@ -39,7 +39,7 @@ if (Auth::logged_in()) {
             Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
             Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
                
-       //dd($_SESSION);
+       
         if (isset($_GET['excel'])) {
             $_SESSION['status'] = $_GET['status'];
             $_SESSION['unit'] = $_GET['unit'];
@@ -62,6 +62,7 @@ if (Auth::logged_in()) {
     }
 
     if (!isset($_GET['unit']) || (isset($_GET['unit']) && $_GET['unit'] === 'all' && $_GET['status'] === 'all')) {
+        
         $total_records = count(
             $staff = $user->select('st.id, unit_name, vd.status, vd.remarks')
                 ->from('staff AS st')
@@ -81,11 +82,19 @@ if (Auth::logged_in()) {
             ->fetch()                  
             ->getAll();
 
-        Session::flash('status', $_GET['status'] ?? "");
-        Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? "");
-        Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? $unit_name['unit_name'] ?? 'All Units');
-        //dd('sadfhdghdfg');
+            $user->buildQuery = [];
 
+            $unit_name = $user->select('unit_name')
+            ->from('units')
+            ->where('unit_id', '=')
+            ->fetch(['unit_id' => $_GET['unit']])
+            ->get();
+
+            $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+
+            Session::flash('status', $_GET['status']);
+            Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+            Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
     }else if ($_GET['unit'] === 'all' && $_GET['status'] !== 'all') {
         $total_records = count(
             $staff = $user->select('st.*, vd.status, vd.remarks')
@@ -107,9 +116,19 @@ if (Auth::logged_in()) {
             ->fetch([':status' => $_GET['status'] ?? ''])                  
             ->getAll();
 
-            Session::flash('status', $_GET['status'] ?? "");
-        Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? "");
-        Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? $unit_name['unit_name']);
+            $user->buildQuery = [];
+
+            $unit_name = $user->select('unit_name')
+            ->from('units')
+            ->where('unit_id', '=')
+            ->fetch(['unit_id' => $_GET['unit']])
+            ->get();
+
+            $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+
+            Session::flash('status', $_GET['status']);
+            Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+            Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
 
     } else if ($_GET['unit'] !== 'all' && $_GET['status'] !== 'all') {
 
@@ -136,9 +155,19 @@ if (Auth::logged_in()) {
             ->getAll();
         
 
-            Session::flash('status', $_GET['status'] ?? "");
-        Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? "");
-        Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? $unit_name['unit_name']);
+            $user->buildQuery = [];
+
+            $unit_name = $user->select('unit_name')
+            ->from('units')
+            ->where('unit_id', '=')
+            ->fetch(['unit_id' => $_GET['unit']])
+            ->get();
+
+            $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+
+            Session::flash('status', $_GET['status']);
+            Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+            Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
         
     }else {
         $total_records = count(
