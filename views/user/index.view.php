@@ -26,8 +26,10 @@
         <th>Grade</th>
         <th>Telephone</th>
         <th>Status</th>
-        <th>Remarks</th>
-	<th>At Post?</th>
+        <?php if(date('d') >= 15) : ?>
+            <th>Remarks</th>
+	        <th>At Post?</th>
+        <?php endif ?>
     </tr>
     <?php foreach($data as $dat) : ?>
         <tr>
@@ -60,7 +62,8 @@
             <?php endif ?>
 
             <?php if($dat['status'] !== 0 && $dat['status'] !== 1) : ?>
-                <form method="post">
+                <?php if(date('d') >= 15) : ?>
+                    <form method="post">
                 <td>
                     
                     <textarea name="remarks" id="remarks" class="rounded" rows="1"><?=isset($remarks) ?? "" ?></textarea>
@@ -71,6 +74,7 @@
                 <td><input type="submit" name="yes" value="Yes" class="btn btn-sm btn-primary">
                 <input type="submit" name="no" value="No" class="btn btn-sm text-white bg-danger"></td>
             </form>
+                <?php endif ?>
 
             <?php else : ?>
                 <td class="text-success"><?=$dat['remarks']?></td>
