@@ -138,8 +138,12 @@ class Model extends Database
         $this->db->query("TRUNCATE $table");
     }
 
-    public function remove($table, $key, $value) {
-        $this->db->query("DELETE FROM $table WHERE $key = :$key", ['id' => $value]);
+    public function remove($table, $data = []) {
+        $key = array_keys($data)[0];
+
+        //dd($data);
+
+        $this->db->query("DELETE FROM $table WHERE $key = :$key", $data);
     }
 
     public function update($table, $keys = [], $id = '') {

@@ -7,7 +7,7 @@
     </a>
     <div class="d-block">
       <div class="text-orange"><strong>ID: <?=$_SESSION['USER']['username']?></strong> </div>
-      <div class="text-orange"><strong>Name: <?=$_SESSION['USER']['lname']?> <?=$_SESSION['USER']['fname']?></strong> </div>
+      <div class="text-orange"><strong>Name: <?=$_SESSION['USER']['fname']?> <?=$_SESSION['USER']['oname']?> <?=$_SESSION['USER']['lname']?></strong> </div>
       <div class="text-orange"><strong>Unit: <?=$_SESSION['USER']['unit_name']?></div></strong>
     </div>
     

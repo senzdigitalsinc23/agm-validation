@@ -30,8 +30,10 @@
             <th>Remarks</th>
 	        <th>At Post?</th>
         <?php endif ?>
-    </tr>
+    </tr><?//=dd($data);?>
+   
     <?php foreach($data as $dat) : ?>
+       
         <tr>
             <td style="width: 50px;"><?=$count ?></td>
             <?php if ($dat['staff_id'] === null) :?>
@@ -64,18 +66,26 @@
             <?php if($dat['status'] !== 0 && $dat['status'] !== 1) : ?>
                 <?php if(date('d') >= 15) : ?>
                     <form method="post">
-                <td>
-                    
-                    <textarea name="remarks" id="remarks" class="rounded" rows="1"><?=isset($remarks) ?? "" ?></textarea>
-                    <input type="hidden" name="staff_id" id="staff_id" value="<?=$dat['staff_id'] ?? 'N/A'?>" >
-                    <input type="hidden" name="user_id" id="user_id" value="<?=$dat['id'] ?? 'N/A'?>">
-                </td>
-                
-                <td><input type="submit" name="yes" value="Yes" class="btn btn-sm btn-primary">
-                <input type="submit" name="no" value="No" class="btn btn-sm text-white bg-danger"></td>
-            </form>
-                <?php endif ?>
+                        <td>                            
+                            <textarea name="remarks" id="remarks" class="rounded" rows="1"><?=isset($remarks) ?? "" ?></textarea>
+                            <input type="hidden" name="staff_id" id="staff_id" value="<?=$dat['staff_id'] ?? 'N/A'?>" >
+                            <input type="hidden" name="user_id" id="user_id" value="<?=$dat['id'] ?? 'N/A'?>">
+                        </td>
+                        
+                        <td><input type="submit" name="yes" value="Yes" class="btn btn-sm btn-primary">
+                        <input type="submit" name="no" value="No" class="btn btn-sm text-white bg-danger"></td>
+                    </form>              
+                <?php endif ?>               
 
+            <?php elseif (date('d') <= 20 && ($dat['status'] == 0 || $dat['status'] == 1)) : ?>
+                <td class="text-success"><?=$dat['remarks']?></td>
+                <td>
+                   
+                    <form action="/unvalidate" method="post"><?=$dat['staff_type']?>
+                        <input type="text" name="staff_id" value="<?=$dat['staff_id']?>" hidden>
+                        <input type="submit" value="Unvalidate" class="btn btn-sm btn-danger">
+                    </form>
+                </td>
             <?php else : ?>
                 <td class="text-success"><?=$dat['remarks']?></td>
             <?php endif ?>

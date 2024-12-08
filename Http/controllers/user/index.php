@@ -22,7 +22,7 @@ if (Auth::logged_in()) {
         unset($_SESSION['SEARCH']);
     }
 
-    $thisMonth = date('m');
+    $thisMonth = date('M');
     $day = date('d');
 
    // dd($thisMonth);
@@ -34,9 +34,11 @@ if (Auth::logged_in()) {
 
     $user->buildQuery = [];
 
-    $prevMonth = date(strtotime($monthYear['month']));
+    $prevMonth = $monthYear['month'];
 
-    if ($monthYear && !($thisMonth == $prevMonth) && $day >= 15) {
+    //dd($thisMonth);
+
+    if ($monthYear && (($thisMonth != $prevMonth) && $day >= 15)) {dd($monthYear);
         
        $user->writeQuery('INSERT INTO all_validations (staff_id, `status`,`month`,`year`,remarks,validated_by,date_validated,user_id)
                                      SELECT staff_id, `status`,`month`,`year`,remarks,validated_by,date_validated,user_id FROM validations');
@@ -62,12 +64,12 @@ if (Auth::logged_in()) {
             ->where('fname', "LIKE", '(')
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
-            ->and('unit', '=')
+            ->and('under', '=')
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
                 'oname' => "%$name%",
-                'unit'  => $unit])                  
+                'under'  => $unit])                  
             ->getAll()
         );
 
@@ -79,14 +81,14 @@ if (Auth::logged_in()) {
             ->where('fname', "LIKE", '(')
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
-            ->and('unit', '=')
+            ->and('under', '=')
             ->orderBy('fname', 'ASC')
             ->limit($initial_page . ',' . $number_per_page)
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
                 'oname' => "%$name%",
-                'unit'  => $unit])                  
+                'under'  => $unit])                  
             ->getAll();
 
     }else if ($_SESSION['USER']['rank'] === "ITM") {
@@ -122,14 +124,15 @@ if (Auth::logged_in()) {
         $staff = $user->select('st.*, vd.status, vd.remarks')
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
-            ->where('unit', '=')
+            ->where('under', '=')
             ->orderBy('status', 'ASC')
             ->limit($initial_page . ',' . $number_per_page)
-            ->fetch(['unit'=> $_SESSION['USER']['unit']])                  
+            ->fetch(['under'=> $_SESSION['USER']['unit']])                  
             ->getAll();
     }
 
     $num_of_pages = ceil(num: $total_records / $number_per_page);
+    
 
     return view('user/index', [
         'header' => $header,
