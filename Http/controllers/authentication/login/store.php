@@ -26,12 +26,24 @@ if($login->validate($_POST)){
     if ($results ) {
         if (password_verify($_POST['password'], $results['password'])) {
             Auth::user($results);
+            
+            $login->buildQuery = [];
+
+            $dates = $login->select()
+            ->from('tracker')
+            ->fetch()
+            ->get();
+            
+
+            Session::flash('date_tracker',$dates);
+
+            //dd($_SESSION);
 
             session_regenerate_id(true);
 
             //dd($results);
 
-            if ($results['rank'] === 'Admin' || $results['rank'] === 'ITO') {
+            if ($results['rank'] === 'Admin' || $results['rank'] === 'ITM') {
                 redirect('/validations');
                 exit;
             } else {
@@ -49,11 +61,4 @@ if($login->validate($_POST)){
 Session::flash('errors', $login->errors);
 Session::flash('data', $_POST);
 
-//dd($_SESSION);
-
 return redirect("/login");
-
-/*  return view("authentication/login/index", [
-    'header' => "Create Note",
-    'errors' => $login->errors
-]); */

@@ -7,6 +7,11 @@ $header = date('M') . " " . date('Y') . " Validation";
 $month = date('M');
 $year = date('Y');
 
+//dd($_SESSION);
+
+//dd(dateInDays(time()));
+
+
 if (Auth::logged_in()) {
     $staff = '';
 

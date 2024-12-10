@@ -142,4 +142,11 @@
     </div>
 </div>
 
+<?php 
+use Core\Session;
+
+Session::unflash(['errors', 'data']);
+//dd($_SESSION);
+?>
+
 <?php require_once(base_path("views/partials/footer.view.php")); ?>

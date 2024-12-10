@@ -9,7 +9,7 @@ function dd($value) {
     exit;
 }
 
-function urlIs($value){
+function urls($value){
     return $_SERVER['REQUEST_URI'] === $value;
 }
 
@@ -65,3 +65,5 @@ function page_numb(int $page_num): int {
 
     return $count;
 }
+
+
