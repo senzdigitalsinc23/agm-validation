@@ -65,11 +65,13 @@ if (Auth::logged_in()) {
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
             ->and('under', '=')
+            ->and('staff_type', '!=')
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
                 'oname' => "%$name%",
-                'under'  => $unit])                  
+                'under'  => $unit,
+                'staff_type' => 'NSP'])                  
             ->getAll()
         );
 
@@ -82,13 +84,15 @@ if (Auth::logged_in()) {
             ->or('lname', "LIKE")
             ->or('oname', 'LIKE', ')')
             ->and('under', '=')
+            ->and('staff_type', '!=')
             ->orderBy('fname', 'ASC')
             ->limit($initial_page . ',' . $number_per_page)
             ->fetch([
                 'fname'=> "%$name%",              
                 'lname'=> "%$name%",
                 'oname' => "%$name%",
-                'under'  => $unit])                  
+                'under'  => $unit,
+                'staff_type' => 'NSP'])                  
             ->getAll();
 
     }else if ($_SESSION['USER']['rank'] === "ITM") {
@@ -115,7 +119,8 @@ if (Auth::logged_in()) {
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
             ->where('unit', '=')
-            ->fetch(['unit'=> $_SESSION['USER']['unit']])
+            ->and('staff_type', '!=')
+            ->fetch(['unit'=> $_SESSION['USER']['unit'], 'staff_type' => 'NSP'])
             ->getAll()
         );
 
@@ -125,9 +130,10 @@ if (Auth::logged_in()) {
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
             ->where('under', '=')
+            ->and('staff_type', '!=')
             ->orderBy('status', 'ASC')
             ->limit($initial_page . ',' . $number_per_page)
-            ->fetch(['under'=> $_SESSION['USER']['unit']])                  
+            ->fetch(['under'=> $_SESSION['USER']['unit'], 'staff_type' => 'NSP'])                  
             ->getAll();
     }
 
