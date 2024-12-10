@@ -41,6 +41,17 @@ function view($view, $params = []){
     require_once base_path("views//" . $view . ".view.php");
 }
 
+function partial_view($partial = [] | ""){ 
+    
+    if (is_array($partial)) {
+        foreach ($partial as $part) {
+            require_once base_path("views//partials//" . $part . ".view.php");
+        }
+    }else {
+        require_once base_path("views//partials//" . $partial . ".view.php");
+    }
+}
+
 function redirect($path){
     return header("Location: {$path}");
     exit;
