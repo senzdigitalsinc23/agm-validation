@@ -5,7 +5,11 @@
       <?php if(date('d') < 12 && Auth::logged_in() && $header != "Dashboard") : ?>
         <h1 class="text-3xl banner font-bold tracking-tight text-gray-900 text-danger"><?=$header?> Not Due <strong>(Validation Starts from 12th December - 15th Dec) </strong></h1>
       <?php else : ?>
-        <h1 class="text-3xl banner font-bold tracking-tight text-gray-900"><?=$header?></h1>
+        <div class="d-flex">
+          <h1 class="text-3xl banner font-bold tracking-tight text-gray-900"><?=$header?></h1>
+          <?=Auth::logged_in() ? Auth::dateInDays(time()) : "";?>
+        </div>
+        
       <?php endif ?>
       
     </div>
