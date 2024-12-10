@@ -1,6 +1,5 @@
-<?php require_once(base_path("views/partials/head.view.php")); ?>
-<?php require_once(base_path("views/partials/nav.view.php")); ?>
-<?php require_once(base_path("views/partials/banner.view.php")); ?>
+<?php partial_view(['head','nav','banner','sidebar']) ?>
+
 
 <div class="d-block ">
     <div class="container-fluid w-900 bg-white p-3 rounded-4 shadow">    
@@ -155,6 +154,6 @@ unset($_SESSION['_flash']);
 //dd($_SESSION);
 
 ?>                  
-<?php require_once(base_path("views/partials/footer.view.php")); ?>
+<?php partial_view('footer') ?>
 
 
