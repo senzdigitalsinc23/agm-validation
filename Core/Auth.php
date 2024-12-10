@@ -37,4 +37,16 @@ class Auth {
             return redirect('/login');
         }
     }
+
+    public static function dateInDays($seconds) {
+        $startDate = Session::get('date_tracker')['start_date'];
+        $endDate = Session::get('date_tracker')['end_date'];
+
+        //dd($_SESSION);
+        
+        $dtF = new \DateTime("$endDate");
+        $dtT = new \DateTime("@$seconds");
+    
+        return $dtF->diff($dtT)->format('%a days, %h hours, %i minutes and %s seconds');
+    }
 }
