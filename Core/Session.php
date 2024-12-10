@@ -21,7 +21,9 @@ class Session
         $_SESSION['_flash'][$key] = $value;
     }
 
-    public static function unflash($data) {
-        unset($_SESSION['_flash'][$data]);
+    public static function unflash($data = [] | "") {
+        foreach ($data as $dat) {
+            unset($_SESSION['_flash'][$dat]);
+        }
     }
 }
