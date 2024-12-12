@@ -177,3 +177,11 @@ table {
 .nav {
     background-color: rgb(226, 240, 252);
 }
+
+.text-bold {
+    font-weight: bold;
+}
+
+.text-bolder {
+    font-weight: bolder;
+}

@@ -1,16 +1,12 @@
 <?php use Core\Auth ?>
 
-<header class="bg-white shadow mb-2">
-    <div class="mx-auto max-w-7xl px-5 py-3 sm:px-6 lg:px-8 d-flex w-100">
+<header class="d-flex bg-white shadow mb-2 w-100">
+    <div class="d-flex max-w-7xl px-5 py-3 sm:px-6 lg:px-8 w-100">
       <?php if(date('d') < 12 && Auth::logged_in() && $header != "Dashboard") : ?>
-        <h1 class="text-3xl banner font-bold tracking-tight text-gray-900 text-danger"><?=$header?> Not Due <strong>(Validation Starts from 12th December - 15th Dec) </strong></h1>
+        <div><h1 class="text-3xl banner font-bold tracking-tight text-gray-900 text-danger"><?=$header?> Not Due <strong>(Validation Starts from 12th December - 15th Dec) </strong></h1></div>
       <?php else : ?>
-        <div class="d-flex">
-          <h1 class="text-3xl banner font-bold tracking-tight text-gray-900"><?=$header?></h1>
-          <?=Auth::logged_in() ? Auth::dateInDays(time()) : "";?>
-        </div>
-        
-      <?php endif ?>
-      
+          <div class="d-flex w-100"><h1 class="text-3xl banner font-bold tracking-tight text-gray-900"><?=$header?></h1></div>
+          <div class="d-flex justify-content-end w-100 text-bolder"><div class="float-end"><?=Auth::logged_in() ? Auth::dateInDays(time()) : "";?></div> </div>
+      <?php endif ?>      
     </div>
-  </header>
+</header>

@@ -1,6 +1,6 @@
 
 <?php require_once base_path("views/partials/head.view.php"); ?>
-<?php require_once base_path("views/partials/nav.view.php"); ?>  
+<?php //require_once base_path("views/partials/nav.view.php"); ?>  
 
     <style>
         h1 {

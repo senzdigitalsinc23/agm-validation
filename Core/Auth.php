@@ -47,6 +47,6 @@ class Auth {
         $dtF = new \DateTime("$endDate");
         $dtT = new \DateTime("@$seconds");
     
-        return $dtF->diff($dtT)->format('%a days, %h hours, %i minutes and %s seconds');
+        return $dtF->diff($dtT)->format('%adays %hhrs %imin %ssec');
     }
 }
