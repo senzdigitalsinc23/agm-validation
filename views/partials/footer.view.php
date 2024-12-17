@@ -1,4 +1,7 @@
 
+</div>
+    </div>
+</div>
 </main>
 
 <script src="js/bootstrap.js"></script>

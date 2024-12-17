@@ -77,4 +77,3 @@ function page_numb(int $page_num): int {
     return $count;
 }
 
-

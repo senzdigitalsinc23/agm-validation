@@ -44,8 +44,20 @@ class Model extends Database
         return $this;
     }
 
-    public function where($cond1, $operator, $acceptBrace = '') {
+    public function where($cond1, $operator = '', $acceptBrace = '') {
         $this->where = "WHERE $acceptBrace$cond1 $operator :$cond1";
+
+        //echo "$cond1 $operator <br>";
+
+        $this->buildQuery[] = $this->where;
+
+        //dd($this->buildQuery);
+
+        return $this;
+    }
+
+    public function where_null($col) {
+        $this->where = "WHERE $col IS NULL";
 
         //echo "$cond1 $operator <br>";
 
@@ -58,6 +70,16 @@ class Model extends Database
 
     public function leftJoin($table, $column, $on) {
         $this->leftJoin = "LEFT JOIN $table ON $column = $on";
+
+        $this->buildQuery[] = $this->leftJoin;
+
+        //dd($this->buildQuery);
+
+        return $this;
+    }
+
+    public function join($table, $column, $on) {
+        $this->leftJoin = "INNER JOIN $table ON $column = $on";
 
         $this->buildQuery[] = $this->leftJoin;
 

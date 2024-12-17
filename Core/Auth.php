@@ -44,9 +44,10 @@ class Auth {
 
         //dd($_SESSION);
         
-        $dtF = new \DateTime("$endDate");
-        $dtT = new \DateTime("@$seconds");
-    
-        return $dtF->diff($dtT)->format('%adays %hhrs %imin %ssec');
+        $date1 = new DateTime('2022-04-01 06:00:00');
+        $date2 = new DateTime('2022-04-10 23:59:59');
+        $interval = $date1->diff($date2);
+            
+        return $interval->format('%adays %hhrs %imin %ssec');
     }
 }

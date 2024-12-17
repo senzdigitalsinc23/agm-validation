@@ -64,7 +64,7 @@ if (Auth::logged_in()) {
     if (!isset($_GET['unit']) || (isset($_GET['unit']) && $_GET['unit'] === 'all' && $_GET['status'] === 'all')) {
         
         $total_records = count(
-            $staff = $user->select('st.id, unit_name, vd.status, vd.remarks')
+            $staff = $user->select('st.*, unit_name, vd.status, vd.remarks, vd.validated_by')
                 ->from('staff AS st')
                 ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
                 ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
@@ -74,7 +74,7 @@ if (Auth::logged_in()) {
 
         $user->buildQuery = [];
 
-        $staff = $user->select('st.*, unit_name,  vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name,  vd.status, vd.remarks,vd.validated_by')
             ->from('staff AS st')
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
             ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
@@ -95,79 +95,155 @@ if (Auth::logged_in()) {
             Session::flash('status', $_GET['status']);
             Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
             Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
+
     }else if ($_GET['unit'] === 'all' && $_GET['status'] !== 'all') {
-        $total_records = count(
-            $staff = $user->select('st.*, vd.status, vd.remarks')
-            ->from('staff AS st')        
-            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
-            ->where('status', '=')
-            ->fetch([':status' => $_GET['status'] ?? ''])                  
-            ->getAll()
-        );
-
-        $user->buildQuery = [];
-
-        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
-            ->from('staff AS st')        
-            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
-            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
-            ->where('status', '=')
-            ->limit($initial_page . ','. $number_per_page)
-            ->fetch([':status' => $_GET['status'] ?? ''])                  
-            ->getAll();
-
+        if ($_GET['status'] == 'IS NULL') {
+            $total_records = count(
+                $staff = $user->select('st.*, vd.status, vd.remarks')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->where_null('status', '')
+                ->fetch()                  
+                ->getAll()
+            );
+    
             $user->buildQuery = [];
+    
+            $staff = $user->select('st.*, unit_name, vd.status, vd.remarks,vd.validated_by')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
+                ->where_null('status', '')
+                ->limit($initial_page . ','. $number_per_page)
+                ->fetch()                  
+                ->getAll();
+    
+                $user->buildQuery = [];
+    
+                $unit_name = $user->select('unit_name')
+                ->from('units')
+                ->where('unit_id', '=')
+                ->fetch(['unit_id' => $_GET['unit']])
+                ->get();
+    
+                $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+    
+                Session::flash('status', $_GET['status']);
+                Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+                Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
+        }else {
+            $total_records = count(
+                $staff = $user->select('st.*, vd.status, vd.remarks')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->where('status', '=')
+                ->fetch([':status' => $_GET['status'] ?? ''])                  
+                ->getAll()
+            );
+    
+            $user->buildQuery = [];
+    
+            $staff = $user->select('st.*, unit_name, vd.status, vd.remarks,vd.validated_by')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
+                ->where('status', '=')
+                ->limit($initial_page . ','. $number_per_page)
+                ->fetch([':status' => $_GET['status'] ?? ''])                  
+                ->getAll();
+    
+                $user->buildQuery = [];
+    
+                $unit_name = $user->select('unit_name')
+                ->from('units')
+                ->where('unit_id', '=')
+                ->fetch(['unit_id' => $_GET['unit']])
+                ->get();
+    
+                $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+    
+                Session::flash('status', $_GET['status']);
+                Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+                Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
+        }
 
-            $unit_name = $user->select('unit_name')
-            ->from('units')
-            ->where('unit_id', '=')
-            ->fetch(['unit_id' => $_GET['unit']])
-            ->get();
-
-            $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
-
-            Session::flash('status', $_GET['status']);
-            Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
-            Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
-
-    } else if ($_GET['unit'] !== 'all' && $_GET['status'] !== 'all') {
-
-        $total_records = count(
-            $staff = $user->select('st.*, vd.status, vd.remarks')
-            ->from('staff AS st')        
-            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
-            ->where('status', '=')
-            ->and('unit', '=')
-            ->fetch(['status' => $_GET['status'], 'unit' => $_GET['unit']])                  
-            ->getAll()
-        );
-
-        $user->buildQuery = [];
-
-        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
-            ->from('staff AS st')        
-            ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
-            ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
-            ->where('status', '=')
-            ->and('unit', '=')
-            ->limit($initial_page . ','. $number_per_page)
-            ->fetch(['status' => $_GET['status'], 'unit' => $_GET['unit']])
-            ->getAll();
         
 
+    } else if ($_GET['unit'] !== 'all' && $_GET['status'] !== 'all') {
+        if ($_GET['status'] == 'IS NULL') {
+            $total_records = count(
+                $staff = $user->select('st.*, vd.status, vd.remarks')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->where_null('status', '')
+                ->and('unit', '=')
+                ->fetch(['unit' => $_GET['unit']])         
+                ->getAll()
+            );
+    
             $user->buildQuery = [];
-
-            $unit_name = $user->select('unit_name')
-            ->from('units')
-            ->where('unit_id', '=')
-            ->fetch(['unit_id' => $_GET['unit']])
-            ->get();
-
-            $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
-
-            Session::flash('status', $_GET['status']);
-            Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
-            Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
+    
+            $staff = $user->select('st.*, unit_name, vd.status, vd.remarks,vd.validated_by')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
+                ->where_null('status', '')                
+                ->and('unit', '=')
+                ->limit($initial_page . ','. $number_per_page)
+                ->fetch(['unit' => $_GET['unit']])     
+                ->getAll();
+    
+                $user->buildQuery = [];
+    
+                $unit_name = $user->select('unit_name')
+                ->from('units')
+                ->where('unit_id', '=')
+                ->fetch(['unit_id' => $_GET['unit']])
+                ->get();
+    
+                $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+    
+                Session::flash('status', $_GET['status']);
+                Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+                Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
+        }else {
+            $total_records = count(
+                $staff = $user->select('st.*, vd.status, vd.remarks')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->where('status', '=')
+                ->and('unit', '=')
+                ->fetch(['status' => $_GET['status'], 'unit' => $_GET['unit']])                  
+                ->getAll()
+            );
+    
+            $user->buildQuery = [];
+    
+            $staff = $user->select('st.*, unit_name, vd.status, vd.remarks,vd.validated_by')
+                ->from('staff AS st')        
+                ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
+                ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
+                ->where('status', '=')
+                ->and('unit', '=')
+                ->limit($initial_page . ','. $number_per_page)
+                ->fetch(['status' => $_GET['status'], 'unit' => $_GET['unit']])
+                ->getAll();
+            
+    
+                $user->buildQuery = [];
+    
+                $unit_name = $user->select('unit_name')
+                ->from('units')
+                ->where('unit_id', '=')
+                ->fetch(['unit_id' => $_GET['unit']])
+                ->get();
+    
+                $_SESSION['_flash']['unit_name'] = $unit_name['unit_name'];
+    
+                Session::flash('status', $_GET['status']);
+                Session::flash('unit', $_SESSION['_flash']['unit'] ?? $_GET['unit'] ?? 'all');
+                Session::flash('unit_name', $_SESSION['_flash']['unit_name'] ?? "All Units");
+        }       
         
     }else {
         $total_records = count(
@@ -181,7 +257,7 @@ if (Auth::logged_in()) {
 
         $user->buildQuery = [];
 
-        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks')
+        $staff = $user->select('st.*, unit_name, vd.status, vd.remarks, vd.validated_by')
             ->from('staff AS st')        
             ->leftJoin('validations AS vd', 'st.id', 'vd.user_id')
             ->leftJoin('units AS un', 'st.unit', 'un.unit_id')
@@ -201,9 +277,22 @@ if (Auth::logged_in()) {
 
 }
 
+$validated_by = function($key) use (&$user){
+    $user->buildQuery = [];
+
+    $val_by = $user->select('lname, fname, oname')
+    ->from('staff')
+    ->where('id', '=')
+    ->fetch([':id' => $key])
+    ->get();
+
+    
+
+    return $val_by['fname'] . " " . $val_by['oname'] . " " . $val_by['lname'];
+};
+
 $num_of_pages = ceil(num: $total_records / $number_per_page);
 
-//dd($_SESSION);
 
 return view('admin/dashboard', [
     'header' => $header,
@@ -212,5 +301,6 @@ return view('admin/dashboard', [
     'units'  => $units,
     'total_pages' => $num_of_pages,
     'total_records' => $total_records,
-    'page'  => $page
+    'page'  => $page,
+    'validated_by'  => $validated_by(107)
 ]);

@@ -81,7 +81,7 @@
                 <td class="text-success"><?=$dat['remarks']?></td>
                 <td>
                    
-                    <form action="/unvalidate" method="post"><?=$dat['staff_type']?>
+                    <form action="/unvalidate" method="post">
                         <input type="text" name="staff_id" value="<?=$dat['staff_id']?>" hidden>
                         <input type="submit" value="Unvalidate" class="btn btn-sm btn-danger">
                     </form>
